@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Voice Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .jarvis-status {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            min-height: 50px;
+        }
+        
+        .control-button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .control-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
+        }
+        
+        .control-button:active {
+            transform: scale(0.95);
+        }
+        
+        .command-log {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .command-entry {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .user-command {
+            color: #4CAF50;
+        }
+        
+        .jarvis-response {
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JARVIS</h1>
+        <div class="jarvis-status" id="status">Ready</div>
+        <button class="control-button" id="controlBtn">START</button>
+        
+        <div class="command-log" id="commandLog">
+            <!-- Command history will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const controlBtn = document.getElementById('controlBtn');
+        const statusDisplay = document.getElementById('status');
+        const commandLog = document.getElementById('commandLog');
+        
+        let isActive = false;
+        
+        // This would need to be connected to your Python backend
+        // For now it's just a frontend mockup
+        
+        controlBtn.addEventListener('click', () => {
+            isActive = !isActive;
+            
+            if (isActive) {
+                statusDisplay.textContent = "Listening...";
+                controlBtn.textContent = "PAUSE";
+                addLogEntry("JARVIS: Good day! How may I assist you?", "jarvis-response");
+                
+                // In a real implementation, this would trigger your Python backend
+                // For example via a WebSocket or API call
+            } else {
+                statusDisplay.textContent = "Paused";
+                controlBtn.textContent = "START";
+                addLogEntry("JARVIS: Going to standby mode.", "jarvis-response");
+            }
+        });
+        
+        function addLogEntry(text, className) {
+            const entry = document.createElement('div');
+            entry.className = `command-entry ${className}`;
+            entry.textContent = text;
+            commandLog.appendChild(entry);
+            commandLog.scrollTop = commandLog.scrollHeight;
+        }
+        
+        // Simulate receiving a command (for demo purposes)
+        setTimeout(() => {
+            if (isActive) {
+                addLogEntry("You: What time is it?", "user-command");
+                setTimeout(() => {
+                    const currentTime = new Date().toLocaleTimeString();
+                    addLogEntry(`JARVIS: The time is ${currentTime}`, "jarvis-response");
+                }, 1000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
